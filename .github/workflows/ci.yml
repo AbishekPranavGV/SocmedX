@@ -1,0 +1,23 @@
+name: CI SocmedX Command Center Portfolio Validation
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify SocmedX Portfolio Packages
+        run: |
+          python -c "
+          import os, zipfile, glob
+          zips = glob.glob('*.zip')
+          assert len(zips) > 0, 'SocmedX bundle missing'
+          for z in zips:
+              with zipfile.ZipFile(z, 'r') as zf:
+                  print(f'Verified SocmedX bundle {z}: {len(zf.namelist())} files')
+          print('SocmedX portfolio package verified!')
+          "
